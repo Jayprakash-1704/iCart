@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import productsRoutes from "./routes/productRoutes.js";
+import ordersRoutes from './routes/ordersRoutes.js'
+import paymentRoutes from './routes/paymentRoutes.js'
 connectDB(); 
 
 const app = express();
@@ -18,8 +20,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
-// app.use("/api/orders", ordersRoutes);
-// app.use("/api/payment", paymentRoutes);
+app.use("/api/orders", ordersRoutes);
+app.use("/api/payment", paymentRoutes);
 // app.use("/api/analytics", analyticsRoutes);
 
 

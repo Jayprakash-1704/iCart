@@ -1,5 +1,5 @@
 import express from "express";
-import protect from "../middleware/authmiddleware.js";
+import protect from "../middleware/authMiddleware.js";
 import admin from "../middleware/adminMiddleware.js";
 import multer from "multer";
 import { getProducts, getProductbyId, createProduct, updateProduct, deleteProduct } from "../controllers/productControllers.js";

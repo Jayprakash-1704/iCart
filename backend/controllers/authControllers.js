@@ -34,6 +34,11 @@ const registerUser = async (req, res) => {
         if (user) {
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
+
+            user.otp = otp;
+            await user.save();
+
+            
             const message = ` Welcome to iCart, ${name}! Thank You for registering with us. We are excited to have you as part of our community. To complete your registration, please use following One Time Password (OTP) for iCard is ${otp} `;
 
             await sendMail(email, "Welcome to iCart Your OTP for Registration", message);
@@ -96,5 +101,27 @@ const getUser = async (req, res) => {
 
 }
 
+const verifyEmail = async (req, res) => {
+    const { email, otp } = req.body;
 
-export { loginUser, registerUser,getUser }
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (user.otp === otp) {
+            user.isVerified = true;
+            user.otp = undefined;
+            await user.save();
+
+            res.json({ message: "Email verified successfully" });
+        } else {
+            res.status(400).json({ message: "Invalid OTP" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+export { loginUser, registerUser, getUser, verifyEmail };
