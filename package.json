@@ -1,0 +1,31 @@
+{
+  "name": "icart-full-stack",
+  "version": "1.0.0",
+  "description": "Ecommerce",
+  "keywords": [
+    "jay"
+  ],
+  "homepage": "https://github.com/Jayprakash-1704/iCart#readme",
+  "bugs": {
+    "url": "https://github.com/Jayprakash-1704/iCart/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jayprakash-1704/iCart.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "install": "cd frontend && npm install && cd ../backend && npm install",
+    "dev:server": "cd backend && npm run dev",
+    "dev:client": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build":"cd frontend && npm run build"
+
+  },
+  "dependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

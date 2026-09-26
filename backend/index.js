@@ -7,10 +7,23 @@ import authRoutes from "./routes/authRoutes.js";
 import productsRoutes from "./routes/productRoutes.js";
 import ordersRoutes from './routes/ordersRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
+import analyticsRoutes from './routes/analyticsRoutes.js'
 connectDB(); 
 
+
+
+
+
+
+
+
+
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
@@ -22,7 +35,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/payment", paymentRoutes);
-// app.use("/api/analytics", analyticsRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 
 const PORT = process.env.PORT || 5000;
