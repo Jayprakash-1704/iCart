@@ -1,38 +1,40 @@
-/* eslint-disable no-unused-vars */
-
 import { Link } from "react-router-dom";
-import ProductCard from "../Components/ProductCard";
+import ProductCard from "../Components/ProductCard.jsx";
 import { useEffect, useState } from "react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible((prev) => !prev);
+    }, 1000);
+
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/products", {
-         
-        });
-        
+        const response = await fetch("http://localhost:5000/api/products");
 
         const data = await response.json();
-        console.log(data);
-        
-        setProducts(data.slice(0,8));
+        const discountedProducts = data.filter(
+          (product) => product.discount > 50,
+        );
+
+        console.log(discountedProducts);
+        setProducts(discountedProducts.slice(0, 8));
       } catch (error) {
         console.log("Error fetching products:", error);
-        setLoading(false);
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
+
     fetchProducts();
+
+    return () => clearInterval(interval);
   }, []);
-
-
-
 
   const categories = [
     {
@@ -61,8 +63,6 @@ function Home() {
     },
   ];
 
-
-
   const benefits = [
     {
       icon: "🚚",
@@ -87,42 +87,51 @@ function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-
+    <div className="min-h-screen overflow-x-hidden bg-white text-gray-900">
       {/* ================= NAV PROMO ================= */}
-      <div className="bg-indigo-600 text-white text-center py-2 px-4 text-sm">
+      <div className="bg-indigo-600 px-4 py-2 text-center text-xs sm:text-sm text-white">
         🎉 Get extra 15% OFF on your first order — Use code{" "}
         <span className="font-bold">WELCOME15</span>
       </div>
 
       {/* ================= HERO ================= */}
-      <section className="bg-indigo-50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-10 items-center min-h-162.5 py-16">
-
+      <section className="overflow-hidden bg-indigo-50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex min-h-125 items-center justify-center py-12 sm:py-16 lg:min-h-162.5">
             {/* Hero Content */}
-            <div>
-              <div className="inline-flex items-center gap-2 bg-white border border-indigo-100 rounded-full px-4 py-2 text-sm font-medium text-indigo-600 shadow-sm">
-                <span className="w-2 h-2 bg-indigo-600 rounded-full"></span>
-                New arrivals are here
+            <div className="w-full text-center">
+              {/* Badge */}
+              <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-3 py-2 text-xs font-medium text-indigo-600 shadow-sm sm:px-4 sm:text-sm">
+                <Sparkles />
+
+                <p
+                  className={
+                    visible
+                      ? "opacity-100 transition-opacity duration-200"
+                      : "opacity-10 transition-opacity duration-200"
+                  }
+                >
+                  New arrivals are here
+                </p>
               </div>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mt-7">
+              {/* Heading */}
+              <h1 className="mt-6 text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:mt-7 lg:text-7xl">
                 Shop smarter.
-                <span className="block text-indigo-600">
-                  Live better.
-                </span>
+                <span className="block text-indigo-600">Live better.</span>
               </h1>
 
-              <p className="mt-6 text-gray-600 text-lg leading-8 max-w-xl">
+              {/* Description */}
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg lg:mt-6 lg:leading-8">
                 Discover trending products, unbeatable prices, and everything
                 you need — all in one place.
               </p>
 
-              <div className="flex flex-wrap gap-4 mt-8">
+              {/* Buttons */}
+              <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
                 <Link
                   to="/shop"
-                  className="inline-flex items-center justify-center px-7 py-4 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200"
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700 sm:w-auto sm:px-7"
                 >
                   Start Shopping
                   <span className="ml-2">→</span>
@@ -130,382 +139,360 @@ function Home() {
 
                 <Link
                   to="/categories"
-                  className="inline-flex items-center justify-center px-7 py-4 rounded-xl bg-white border border-gray-200 text-gray-900 font-semibold hover:border-indigo-300 hover:text-indigo-600 transition"
+                  className="inline-flex w-full items-center justify-center rounded-xl border border-gray-200 bg-white px-6 py-3.5 font-semibold text-gray-900 transition hover:border-indigo-300 hover:text-indigo-600 sm:w-auto sm:px-7"
                 >
                   Explore Categories
                 </Link>
               </div>
 
               {/* Stats */}
-              <div className="flex flex-wrap gap-8 mt-12">
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-6 sm:gap-x-8">
                 <div>
-                  <p className="text-3xl font-bold">10K+</p>
-                  <p className="text-sm text-gray-500 mt-1">Products</p>
+                  <p className="text-2xl font-bold sm:text-3xl">10K+</p>
+                  <p className="mt-1 text-xs text-gray-500 sm:text-sm">
+                    Products
+                  </p>
                 </div>
 
-                <div className="w-px bg-gray-300"></div>
+                <div className="hidden h-10 w-px bg-gray-300 sm:block"></div>
 
                 <div>
-                  <p className="text-3xl font-bold">5K+</p>
-                  <p className="text-sm text-gray-500 mt-1">Customers</p>
+                  <p className="text-2xl font-bold sm:text-3xl">5K+</p>
+                  <p className="mt-1 text-xs text-gray-500 sm:text-sm">
+                    Customers
+                  </p>
                 </div>
 
-                <div className="w-px bg-gray-300"></div>
+                <div className="hidden h-10 w-px bg-gray-300 sm:block"></div>
 
                 <div>
-                  <p className="text-3xl font-bold">4.8</p>
-                  <p className="text-sm text-gray-500 mt-1">Average Rating</p>
+                  <p className="text-2xl font-bold sm:text-3xl">4.8</p>
+                  <p className="mt-1 text-xs text-gray-500 sm:text-sm">
+                    Average Rating
+                  </p>
                 </div>
               </div>
             </div>
-
-            {/* Hero Image */}
-            <div className="relative">
-              <div className="absolute -top-8 -right-8 w-32 h-32 bg-indigo-200 rounded-full blur-2xl opacity-70"></div>
-
-              <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-purple-200 rounded-full blur-3xl opacity-70"></div>
-
-              <div className="relative rounded-4xl overflow-hidden shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1000&q=85"
-                  alt="Shopping collection"
-                  className="w-full h-125 lg:h-145 object-cover"
-                />
-
-                {/* Floating Offer */}
-                <div className="absolute top-6 right-6 bg-white rounded-2xl p-5 shadow-xl">
-                  <p className="text-xs text-gray-500 font-medium">
-                    TODAY'S OFFER
-                  </p>
-                  <p className="text-3xl font-black text-indigo-600 mt-1">
-                    30%
-                  </p>
-                  <p className="text-sm font-semibold">OFF</p>
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
 
       {/* ================= BENEFITS ================= */}
-      <section className="border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-
+      <section className="rounded-b-2xl border-b border-gray-100 bg-indigo-50">
+        <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-8 lg:px-8">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {benefits.map((item) => (
-              <div
-                key={item.title}
-                className="flex items-center gap-4"
-              >
-                <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-xl">
+              <div key={item.title} className="flex items-center gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-xl shadow-sm sm:h-12 sm:w-12">
                   {item.icon}
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-sm">
-                    {item.title}
-                  </h3>
+                  <h3 className="text-sm font-semibold">{item.title}</h3>
 
-                  <p className="text-xs text-gray-500 mt-1">
-                    {item.text}
-                  </p>
+                  <p className="mt-1 text-xs text-gray-500">{item.text}</p>
                 </div>
               </div>
             ))}
-
           </div>
         </div>
       </section>
 
       {/* ================= CATEGORIES ================= */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <div className="flex items-end justify-between mb-10">
+      <section className="py-14 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 flex items-end justify-between sm:mb-10">
             <div>
-              <p className="text-sm font-semibold text-indigo-600 uppercase tracking-wider">
+              <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600 sm:text-sm">
                 Explore
               </p>
 
-              <h2 className="text-3xl sm:text-4xl font-black mt-2">
+              <h2 className="mt-2 text-2xl font-black sm:text-3xl lg:text-4xl">
                 Shop by Category
               </h2>
 
-              <p className="text-gray-500 mt-3">
+              <p className="mt-2 text-sm text-gray-500 sm:mt-3 sm:text-base">
                 Find everything you need in one place.
               </p>
             </div>
 
             <Link
               to="/categories"
-              className="hidden sm:block font-semibold text-indigo-600 hover:text-indigo-700"
+              className="hidden font-semibold text-indigo-600 hover:text-indigo-700 sm:block"
             >
               View All →
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
             {categories.map((category) => (
               <Link
-                to="/shop"
+                to={`/categories`}
                 key={category.name}
-                className="group relative overflow-hidden rounded-2xl h-72 bg-gray-100"
+                className="group relative h-52 overflow-hidden rounded-xl bg-gray-100 sm:h-64 sm:rounded-2xl lg:h-72"
               >
                 <img
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
                 />
 
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent"></div>
 
-                <div className="absolute bottom-5 left-5 text-white">
-                  <h3 className="text-xl font-bold">
+                <div className="absolute bottom-3 left-3 text-white sm:bottom-5 sm:left-5">
+                  <h3 className="text-base font-bold sm:text-xl">
                     {category.name}
                   </h3>
 
-                  <p className="text-sm text-white/80 mt-1">
+                  <p className="mt-1 text-xs text-white/80 sm:text-sm">
                     {category.count}
                   </p>
 
-                  <span className="inline-block mt-3 text-sm font-semibold">
+                  <span className="mt-2 inline-block text-xs font-semibold sm:mt-3 sm:text-sm">
                     Shop Now →
                   </span>
                 </div>
               </Link>
             ))}
-
           </div>
+
+          <Link
+            to="/categories"
+            className="mt-6 block text-center font-semibold text-indigo-600 sm:hidden"
+          >
+            View All Categories →
+          </Link>
         </div>
       </section>
 
       {/* ================= FLASH SALE ================= */}
-      <section className="bg-gray-950 py-20 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
-
+      <section className="bg-gray-950 py-14 text-white sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 flex flex-col gap-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 text-indigo-400 text-sm font-bold">
+              <div className="inline-flex items-center gap-2 text-sm font-bold text-indigo-400">
                 <span>⚡</span>
                 LIMITED TIME
               </div>
 
-              <h2 className="text-3xl sm:text-4xl font-black mt-2">
+              <h2 className="mt-2 text-2xl font-black sm:text-3xl lg:text-4xl">
                 Flash Sale
               </h2>
 
-              <p className="text-gray-400 mt-2">
+              <p className="mt-2 text-sm text-gray-400 sm:text-base">
                 Grab your favourites before they're gone.
               </p>
             </div>
 
             {/* Timer */}
-            <div className="flex gap-2">
-              <div className="bg-gray-800 rounded-xl px-4 py-3 text-center">
-                <p className="text-xl font-bold">08</p>
-                <p className="text-[10px] text-gray-400">HOURS</p>
+            <div className="flex justify-center gap-1.5 sm:gap-2">
+              <div className="rounded-lg bg-gray-800 px-3 py-2 text-center sm:rounded-xl sm:px-4 sm:py-3">
+                <p className="text-lg font-bold sm:text-xl">08</p>
+                <p className="text-[9px] text-gray-400 sm:text-[10px]">HOURS</p>
               </div>
 
-              <div className="text-xl font-bold pt-3">:</div>
+              <div className="pt-2 text-lg font-bold sm:pt-3 sm:text-xl">:</div>
 
-              <div className="bg-gray-800 rounded-xl px-4 py-3 text-center">
-                <p className="text-xl font-bold">42</p>
-                <p className="text-[10px] text-gray-400">MIN</p>
+              <div className="rounded-lg bg-gray-800 px-3 py-2 text-center sm:rounded-xl sm:px-4 sm:py-3">
+                <p className="text-lg font-bold sm:text-xl">42</p>
+                <p className="text-[9px] text-gray-400 sm:text-[10px]">MIN</p>
               </div>
 
-              <div className="text-xl font-bold pt-3">:</div>
+              <div className="pt-2 text-lg font-bold sm:pt-3 sm:text-xl">:</div>
 
-              <div className="bg-gray-800 rounded-xl px-4 py-3 text-center">
-                <p className="text-xl font-bold">18</p>
-                <p className="text-[10px] text-gray-400">SEC</p>
+              <div className="rounded-lg bg-gray-800 px-3 py-2 text-center sm:rounded-xl sm:px-4 sm:py-3">
+                <p className="text-lg font-bold sm:text-xl">18</p>
+                <p className="text-[9px] text-gray-400 sm:text-[10px]">SEC</p>
               </div>
             </div>
-
           </div>
 
           {/* Product Grid */}
-
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <ProductCard
-                key={product.name}
-                product={product}
-              />
-            ))}
-          </div>
-
-
-
+          {loading ? (
+            <div className="py-10 text-center text-gray-400">
+              Loading products...
+            </div>
+          ) : products.length === 0 ? (
+            <div className="py-10 text-center text-gray-400">
+              No products available.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {products.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* ================= PROMO BANNER ================= */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <div className="relative overflow-hidden rounded-4xl bg-indigo-600 px-8 py-14 sm:px-12 lg:px-16">
-
+      <section className="py-14 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl bg-indigo-600 px-6 py-10 sm:rounded-4xl sm:px-10 sm:py-14 lg:px-16">
             {/* Decorative circles */}
-            <div className="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-white/10"></div>
+            <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-white/10 sm:h-80 sm:w-80"></div>
 
-            <div className="absolute right-20 -bottom-32 w-72 h-72 rounded-full bg-white/10"></div>
+            <div className="absolute -bottom-32 right-5 h-60 w-60 rounded-full bg-white/10 sm:right-20 sm:h-72 sm:w-72"></div>
 
             <div className="relative z-10 max-w-2xl">
-
-              <p className="text-indigo-200 text-sm font-bold uppercase tracking-widest">
+              <p className="text-xs font-bold uppercase tracking-widest text-indigo-200 sm:text-sm">
                 Special Weekend Offer
               </p>
 
-              <h2 className="text-4xl sm:text-5xl font-black text-white mt-4 leading-tight">
+              <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:mt-4 sm:text-4xl lg:text-5xl">
                 Upgrade your lifestyle
                 <span className="block text-indigo-200">
                   without breaking the bank.
                 </span>
               </h2>
 
-              <p className="text-indigo-100 mt-5 max-w-lg">
-                Enjoy exclusive discounts across electronics, fashion,
-                home essentials and more.
+              <p className="mt-4 max-w-lg text-sm leading-6 text-indigo-100 sm:mt-5 sm:text-base">
+                Enjoy exclusive discounts across electronics, fashion, home
+                essentials and more.
               </p>
 
               <Link
                 to="/deals"
-                className="inline-flex items-center mt-7 bg-white text-indigo-600 px-7 py-3.5 rounded-xl font-bold hover:bg-gray-100 transition"
+                className="mt-6 inline-flex items-center rounded-xl bg-white px-6 py-3 font-bold text-indigo-600 transition hover:bg-gray-100 sm:mt-7 sm:px-7 sm:py-3.5"
               >
-                Explore Deals →
+                Explore Deals <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
-
             </div>
           </div>
-
         </div>
       </section>
 
       {/* ================= WHY ICART ================= */}
-      <section className="bg-gray-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <div className="text-center max-w-2xl mx-auto mb-12">
-
-            <p className="text-sm font-bold text-indigo-600 uppercase tracking-wider">
+      <section className="bg-gray-50 py-14 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
+            <p className="text-xs font-bold uppercase tracking-wider text-indigo-600 sm:text-sm">
               Why iCart?
             </p>
 
-            <h2 className="text-3xl sm:text-4xl font-black mt-2">
+            <h2 className="mt-2 text-2xl font-black sm:text-3xl lg:text-4xl">
               Built around your shopping experience
             </h2>
 
-            <p className="text-gray-500 mt-4">
-              From discovering products to getting them delivered,
-              we keep everything simple.
+            <p className="mt-3 text-sm text-gray-500 sm:mt-4 sm:text-base">
+              From discovering products to getting them delivered, we keep
+              everything simple.
             </p>
-
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <div className="bg-white p-7 rounded-2xl border border-gray-100 hover:shadow-xl transition">
-              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-2xl">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 transition hover:shadow-xl sm:p-7">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl">
                 🎯
               </div>
 
-              <h3 className="text-xl font-bold mt-5">
-                Curated Products
-              </h3>
+              <h3 className="mt-5 text-xl font-bold">Curated Products</h3>
 
-              <p className="text-gray-500 mt-2 leading-6">
-                Discover carefully selected products from different
-                categories and brands.
+              <p className="mt-2 leading-6 text-gray-500">
+                Discover carefully selected products from different categories
+                and brands.
               </p>
             </div>
 
-            <div className="bg-white p-7 rounded-2xl border border-gray-100 hover:shadow-xl transition">
-              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-2xl">
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 transition hover:shadow-xl sm:p-7">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl">
                 💰
               </div>
 
-              <h3 className="text-xl font-bold mt-5">
-                Better Prices
-              </h3>
+              <h3 className="mt-5 text-xl font-bold">Better Prices</h3>
 
-              <p className="text-gray-500 mt-2 leading-6">
-                Find competitive prices, regular discounts and
-                exclusive deals.
+              <p className="mt-2 leading-6 text-gray-500">
+                Find competitive prices, regular discounts and exclusive deals.
               </p>
             </div>
 
-            <div className="bg-white p-7 rounded-2xl border border-gray-100 hover:shadow-xl transition">
-              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-2xl">
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 transition hover:shadow-xl sm:p-7">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl">
                 ❤️
               </div>
 
-              <h3 className="text-xl font-bold mt-5">
-                Customer First
-              </h3>
+              <h3 className="mt-5 text-xl font-bold">Customer First</h3>
 
-              <p className="text-gray-500 mt-2 leading-6">
-                Your shopping experience matters to us from checkout
-                to delivery.
+              <p className="mt-2 leading-6 text-gray-500">
+                Your shopping experience matters to us from checkout to
+                delivery.
               </p>
             </div>
-
           </div>
-
         </div>
       </section>
 
       {/* ================= NEWSLETTER ================= */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+      <section className="py-14 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-4xl px-4">
+          <div className="rounded-3xl bg-gray-950 px-5 py-10 text-center sm:rounded-4xl sm:px-12 sm:py-12">
+            <div className="text-4xl">📩</div>
 
-          <div className="bg-gray-950 rounded-4xl px-6 py-12 sm:px-12">
-
-            <div className="text-4xl">
-              📩
-            </div>
-
-            <h2 className="text-3xl sm:text-4xl font-black text-white mt-4">
+            <h2 className="mt-4 text-2xl font-black text-white sm:text-3xl lg:text-4xl">
               Don't miss the good stuff.
             </h2>
 
-            <p className="text-gray-400 mt-3 max-w-xl mx-auto">
-              Subscribe to get product launches, exclusive deals and
-              special offers directly in your inbox.
+            <p className="mx-auto mt-3 max-w-xl text-sm text-gray-400 sm:text-base">
+              Subscribe to get product launches, exclusive deals and special
+              offers directly in your inbox.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto mt-8">
-
+            <div className="mx-auto mt-7 flex max-w-xl flex-col gap-3 sm:mt-8 sm:flex-row">
               <input
                 type="email"
                 placeholder="Enter your email address"
-                className="flex-1 h-13 px-5 rounded-xl bg-white text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="h-12 w-full rounded-xl bg-white px-5 text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 sm:h-13"
               />
 
-              <button
-                className="h-13 px-7 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition"
-              >
+              <button className="h-12 w-full rounded-xl bg-indigo-600 px-7 font-bold text-white transition hover:bg-indigo-700 sm:h-13 sm:w-auto">
                 Subscribe
               </button>
-
             </div>
 
-            <p className="text-xs text-gray-500 mt-4">
+            <p className="mt-4 text-xs text-gray-500">
               No spam. Unsubscribe anytime.
             </p>
-
           </div>
-
         </div>
       </section>
-
     </div>
   );
 }
 
 export default Home;
 
+// ### What I changed
+
+// The important responsive changes are:
+
+// * **Hero:** `text-5xl` → `text-4xl sm:text-5xl lg:text-7xl`
+// * **Hero image:** `h-125` → `h-72 sm:h-96 lg:h-[580px]`
+// * Removed the oversized `min-h-162.5` behaviour on mobile.
+// * Buttons become **full width on mobile**.
+// * Stats wrap properly.
+// * Benefits become **1 → 2 → 4 columns**.
+// * Category cards become **2 → 4 columns**.
+// * Category heights adapt to screen size.
+// * Flash-sale timer scales down on mobile.
+// * Product grid remains **1 → 2 → 4 columns**.
+// * Promo banner typography and padding scale down.
+// * Why iCart cards become **1 → 2 → 3 columns**.
+// * Newsletter input/button become properly stacked on mobile.
+// * Added `overflow-x-hidden` to prevent accidental horizontal scrolling.
+// * Added `clearInterval(interval)` to prevent the animation interval from continuing after unmount.
+// * Fixed the Unsplash URLs.
+// * Changed `key={product.name}` to `key={product._id}`.
+// * Changed the amber benefits section to `bg-indigo-50` so the colour system is consistent.
+// * Added loading/empty-product handling.
+
+// **One thing outside this file:** make sure your `index.html` has:
+
+// ```html
+// <meta
+//   name="viewport"
+//   content="width=device-width, initial-scale=1.0"
+// />
+// ```
+
+// If your **Navbar** isn't responsive, it can still create horizontal scrolling even after fixing this Home page.

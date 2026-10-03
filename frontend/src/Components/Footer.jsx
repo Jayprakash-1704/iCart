@@ -283,7 +283,7 @@ function Footer() {
         >
 
           <p className="text-xs sm:text-sm text-gray-500">
-            © 2026 iCart. All rights reserved.
+            © {new Date().getFullYear()} iCart. All rights reserved.
           </p>
 
           <div className="flex items-center gap-5 text-xs sm:text-sm text-gray-500">

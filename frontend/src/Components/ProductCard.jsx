@@ -1,7 +1,12 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function ProductCard({ product }) {
+const navigate=useNavigate();
+const handleProductId = (id) => {
+  navigate(`/shop/product/${id}`);
+};
+
   return (
     <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition duration-300">
 
@@ -15,7 +20,7 @@ function ProductCard({ product }) {
         />
 
         {/* Discount Badge */}
-        {product.discount && (
+        {product.discount >0 && (
           <span className="absolute top-4 left-4 bg-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-full">
             {product.discount}% OFF
           </span>
@@ -24,7 +29,7 @@ function ProductCard({ product }) {
         {/* Wishlist Button */}
         <button
           type="button"
-          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black flex items-center justify-center shadow-sm hover:bg-indigo-600 hover:text-white transition"
+          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black text-white flex items-center justify-center shadow-sm hover:bg-indigo-600 hover:text-white transition"
           aria-label={`Add ${product.name} to wishlist`}
         >
           ♡
@@ -50,8 +55,8 @@ function ProductCard({ product }) {
         <div className="flex items-center gap-1 mt-3 text-sm">
           <span className="text-yellow-500">★</span>
 
-          <span className="font-semibold">
-            {product.rating || "4.5"}
+          <span className="font-semibold text-gray-900">
+            {product.rating || "Rating not available"}
           </span>
 
           <span className="text-gray-400">
@@ -73,11 +78,11 @@ function ProductCard({ product }) {
         </div>
 
         {/* Add to Cart */}
-        <button
+        <button onClick={()=>{handleProductId(product._id)}}
           type="button"
           className="w-full mt-4 py-3 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-indigo-600 transition"
         >
-          Add to Cart
+          View Details
         </button>
 
       </div>
