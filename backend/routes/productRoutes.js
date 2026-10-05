@@ -2,7 +2,7 @@ import express from "express";
 import protect from "../middleware/authMiddleware.js";
 import admin from "../middleware/adminMiddleware.js";
 import multer from "multer";
-import { getProducts, getProductbyId, createProduct, updateProduct, deleteProduct } from "../controllers/productControllers.js";
+import { getProducts, getProductbyId, createProduct, updateProduct, deleteProduct,  } from "../controllers/productControllers.js";
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
@@ -11,6 +11,7 @@ const upload = multer({ dest: 'uploads/' });
 
 router.post("/", protect,admin,upload.single("imageUrl"), createProduct);
 router.get("/",getProducts);
+// router.get("/", getProductsByCategory);
 
 //  get product by id (user and admin) , modify and delete (by only admin) 
 

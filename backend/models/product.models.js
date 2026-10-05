@@ -17,6 +17,10 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    subCategory: {
+        type: String,
+        required: true
+    },
     discount: {
         type: Number,
         default: 0
@@ -25,9 +29,9 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    imageUrl: { 
+    imageUrl: {
         type: String,
-        required:true
+        required: true
     },
     createdAt: {
         type: Date,
@@ -35,7 +39,7 @@ const productSchema = new mongoose.Schema({
     },
     rating: {
         type: Number,
-        default: 0
+        
     },
     numReviews: {
         type: Number,

@@ -63,3 +63,31 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;             /* Chrome, Safari */
 }
+
+
+
+@keyframes cartSuccess {
+  0% {
+    opacity: 0;
+    transform: translate(0, 10px) scale(0.4);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translate(0, -5px) scale(1.15);
+  }
+
+  45% {
+    opacity: 1;
+    transform: translate(10px, -15px) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(55px, -35px) scale(0.8);
+  }
+}
+
+.animate-cart-success {
+  animation: cartSuccess 1.2s ease-out forwards;
+}

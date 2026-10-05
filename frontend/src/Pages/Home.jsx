@@ -19,7 +19,7 @@ function Home() {
 
         const data = await response.json();
         const discountedProducts = data.filter(
-          (product) => product.discount > 50,
+          (product) => product.discount > 25,
         );
 
         console.log(discountedProducts);

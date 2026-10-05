@@ -17,7 +17,7 @@ const categories = [
         "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=700&q=80",
     },
     {
-      name: "Home & Living",
+      name: "Home-Kitchen",
       count: "900+ Products",
       image:
         "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=700&q=80",
@@ -34,11 +34,13 @@ function Categories() {
   return (
     <div className="min-h-screen">
       <CategoryMenu  />
-      <div className="grid mt-10 grid-cols-2 gap-3 sm:gap-5 px-4 py-4 lg:grid-cols-4">
+      
+      <div className="text-4xl font-bold text-black flex justify-center text-center mt-4">Popular Categories</div>
+      <div className="grid mt-6 grid-cols-2 gap-3 sm:gap-5 px-4 py-4 lg:grid-cols-4">
 
             {categories.map((category) => (
               <Link
-                to={`/categories/${category.name.toLowerCase()}`}
+                to={`/shop/${category.name.toLowerCase()}`}
                 key={category.name}
                 className="group relative h-52 overflow-hidden rounded-xl bg-gray-100 sm:h-64 sm:rounded-2xl lg:h-72"
               >

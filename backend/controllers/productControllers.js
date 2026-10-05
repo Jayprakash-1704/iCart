@@ -6,18 +6,42 @@ import Product from "../models/product.models.js";
 
 const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({})
-        res.json(products)
-    } catch (error) {
-        res.status(500).json({ message: "Server Error" })
-    }
+        const { category, subCategory } = req.query;
 
-}
+        const filter = {};
+
+        if (category) {
+            filter.category = {
+                $regex: `^${category}$`,
+                $options: "i",
+            };
+        }
+
+        if (subCategory) {
+            filter.subCategory = {
+                $regex: `^${subCategory}$`,
+                $options: "i",
+            };
+        }
+
+
+        const products = await Product.find(filter);
+
+        res.status(200).json(products);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+
+        res.status(500).json({
+            message: "Failed to fetch products",
+        });
+    }
+};
+
 
 const getProductbyId = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
-        if (product) { 
+        if (product) {
             res.json(product);
         }
         else {
@@ -36,7 +60,7 @@ const getProductbyId = async (req, res) => {
 const createProduct = async (req, res) => {
     try {
 
-        const { name, description, price, category, stock,discount,rating,numReviews } = req.body;
+        const { name, description, price, category, subCategory, stock, discount, rating, numReviews } = req.body;
         let imageUrl = "";
         if (req.file) {
             const result = await cloudinary.uploader.upload(req.file.path);
@@ -48,6 +72,7 @@ const createProduct = async (req, res) => {
             description,
             price,
             category,
+            subCategory,
             stock,
             imageUrl,
             discount,
@@ -68,13 +93,16 @@ const createProduct = async (req, res) => {
 //put 
 const updateProduct = async (req, res) => {
     try {
-        const { name, description, price, category, stock,discount } = req.body;
+        const { name, description, price, category,rating, subCategory, stock, discount,numReviews } = req.body;
         const product = await Product.findById(req.params.id);
         if (product) {
             product.name = name || product.name;
             product.description = description || product.description;
             product.price = price || product.price;
+            product.rating = rating || product.rating;
+            product.numReviews = numReviews || product.numReviews;
             product.category = category || product.category;
+            product.subCategory = subCategory || product.subCategory;
             product.stock = stock || product.stock;
             product.discount = discount || product.discount;
 

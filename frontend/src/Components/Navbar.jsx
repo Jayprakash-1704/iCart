@@ -2,14 +2,17 @@
 import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { AuthContext } from "../Context/authContext";
-import { MapPin, Search, ShoppingCart } from "lucide-react";
+import { BadgePercent, House, LayoutList, MapPin, Search, ShoppingCart, Store } from "lucide-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useLocation } from "../Context/LocationContext";
 
+import Location from "../Pages/Location";
 
 function Navbar() {
+  const { location } = useLocation();
 
   const [showSearchBox, setShowSearchBox] = useState(false);
-
+  const [showLocation, setShowLocation] = useState(false);
   const { user, logout } = useContext(AuthContext)
   const cartItems = useSelector((state) => state.cart.cartItems)
   const navigate = useNavigate();
@@ -25,10 +28,10 @@ function Navbar() {
 
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Shop", path: "/shop" },
-    { name: "Categories", path: "/categories" },
-    { name: "Deals", path: "/deals" },
+    { name: "Home", path: "/", icon: <House /> },
+    { name: "Shop", path: "/shop", icon: <Store /> },
+    { name: "Categories", path: "/categories", icon: <LayoutList /> },
+    { name: "Deals", path: "/deals", icon: <BadgePercent /> },
   ];
 
   return (
@@ -71,7 +74,7 @@ function Navbar() {
                 key={link.path}
                 to={link.path}
                 className={({ isActive }) =>
-                  `relative text-sm font-medium transition-all duration-200
+                  `relative text-sm flex flex-col items-center font-medium transition-all duration-200
                   ${isActive
                     ? "text-indigo-500"
                     : "text-gray-500 hover:text-gray-900"
@@ -80,6 +83,7 @@ function Navbar() {
               >
                 {({ isActive }) => (
                   <>
+                    {link.icon}
                     {link.name}
 
                     {isActive && (
@@ -140,9 +144,10 @@ function Navbar() {
 
 
 
-            <Link to="/location">
-              <button
-                className="
+
+            <button
+              onClick={() => setShowLocation(true)}
+              className="
                   flex
                   items-center
                   gap-1
@@ -151,16 +156,25 @@ function Navbar() {
                   rounded-full
                   bg-gray-100 text-gray-700 hover:bg-indigo-600 hover:text-white transition
                 "
-                title="Location"
-              >
+              title={`Location: ${location || "Select Location"}`}
+            >
 
-                <MapPin className="w-5 h-5" />
-                <span className="text-sm hidden lg:flex font-medium">Location</span>
+              <MapPin size={20} />
+
+              <div className="text-left">
+                
+                <p className="text-sm  md:block hidden  font-semibold">
+                  {location || "Select Location"}
+                </p>
+                <p className=" block md:hidden  md:text-25px font-semibold">
+                  {location.split(", ")[0] || "Select Location"}
+                </p>
+              </div>
 
 
 
-              </button>
-            </Link>
+            </button>
+
 
 
             {/* Cart */}
@@ -296,6 +310,11 @@ function Navbar() {
           </div>
         </div>
       </div>
+      {showLocation && (
+        <Location
+          onClose={() => setShowLocation(false)}
+        />
+      )}
     </nav>
   );
 }

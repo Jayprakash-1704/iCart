@@ -40,11 +40,12 @@ function App() {
 
         <Route path="/deals" element={<Deals/>}/>
         <Route path="/cart" element={<Cart/>}/>
+        <Route path="/shop" element={<Shop/>}/>
+        <Route path="/shop/:category" element={<Shop />} />
+        <Route path="/shop/:category/:subCategory" element={<Shop />} />
         <Route path="/shop/product/:productId" element={<ProductDetails/>}/>
 
         <Route path="/categories" element={<CategoryMenu/>}/>
-        <Route path="/shop" element={<Shop/>}/>
-        <Route path="/shop/:category/:subCategory" element={<Shop />} />
     </Routes>
     <Footer/>
   </Router>

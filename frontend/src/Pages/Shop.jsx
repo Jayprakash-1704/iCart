@@ -1,9 +1,11 @@
 import ProductCard from "@/Components/ProductCard";
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const Shop = () => {
   const { category, subCategory } = useParams();
+  console.log("Category:", category);
+  console.log("Sub Category:", subCategory);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,9 +19,18 @@ const Shop = () => {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          `http://localhost:5000/api/products?category=${category}&subCategory=${subCategory}`
-        );
+        let url = "http://localhost:5000/api/products";
+
+        // If category + subCategory exist
+        if (category && subCategory) {
+          url += `?category=${encodeURIComponent(category)}&subCategory=${encodeURIComponent(subCategory)}`;
+        }
+        
+        else if (category) {
+          url += `?category=${encodeURIComponent(category)}`;
+        }
+
+        const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error("Failed to fetch products");
@@ -71,11 +82,11 @@ const Shop = () => {
   return (
     <section className="bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-
         {/* Header */}
         <div className="mb-8">
           <p className="text-sm text-gray-500">
-            Home / Shop / {category} / {subCategory}
+            Home &gt; Shop  {category && ` > ${category}`}
+            {subCategory && ` > ${subCategory}`}
           </p>
 
           <h1 className="mt-2 text-3xl font-bold capitalize text-gray-900">
@@ -89,7 +100,8 @@ const Shop = () => {
 
         {/* Products */}
         {products.length === 0 ? (
-          <div className="rounded-xl bg-white p-10 text-center shadow-sm">
+          <div className="rounded-xl flex flex-col justify-center items-center bg-white p-10 text-center shadow-sm">
+            <img className="w-30 h-30  " src="https://res.cloudinary.com/dhaztslbj/image/upload/v1791138847/undraw_no-data_ig65_wwbliq.svg" alt="404" />
             <h2 className="text-xl font-semibold text-gray-800">
               No products found
             </h2>
@@ -100,11 +112,9 @@ const Shop = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-
             {products.map((product) => (
-              <ProductCard key={product._id} product={product}/>
+              <ProductCard key={product._id} product={product} />
             ))}
-
           </div>
         )}
       </div>
