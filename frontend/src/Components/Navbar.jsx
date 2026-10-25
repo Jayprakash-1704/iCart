@@ -1,8 +1,8 @@
 
 import { useContext, useState } from "react";
 import { useSelector } from "react-redux";
-import { AuthContext } from "../Context/authContext";
-import { BadgePercent, House, LayoutList, MapPin, Search, ShoppingCart, Store } from "lucide-react";
+import { AuthContext } from "../Context/AuthContext.jsx";
+import { Astroid, BadgePercent, House, LayoutList, MapPin, Search, ShoppingCart, Store } from "lucide-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useLocation } from "../Context/LocationContext";
 
@@ -32,20 +32,21 @@ function Navbar() {
     { name: "Shop", path: "/shop", icon: <Store /> },
     { name: "Categories", path: "/categories", icon: <LayoutList /> },
     { name: "Deals", path: "/deals", icon: <BadgePercent /> },
+    { name: "Mihy AI", path: "/mihy", icon: <Astroid /> },
   ];
 
   return (
     <nav className="sticky top-0 z-50 bg-white/20 backdrop-blur-xl border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="h-18 flex items-center justify-between gap-6">
+        <div className="h-18 flex items-center justify-between  gap-6">
 
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
             <img
               src="https://res.cloudinary.com/dhaztslbj/image/upload/v1789927947/iCart-fevicon_zbkgj6.jpg"
               alt="iCart Logo"
-              className="w-12 h-12 object-contain"
+              className=" w-10 h-10 md:w-12 md:h-12 object-contain"
             />
           </Link>
 
@@ -138,8 +139,8 @@ function Navbar() {
 
 
             {/* search */}
-            <button onClick={toggleSearchBox} className="flex items-center justify-center p-2.5 cursor-pointer rounded-full bg-gray-100 text-gray-700 hover:bg-indigo-600 hover:text-white transition duration-200" title="Search">
-              <Search className="w-5 h-5" />
+            <button onClick={toggleSearchBox} className="hidden md:flex items-center justify-center p-2.5 cursor-pointer rounded-full bg-gray-100 text-gray-700 hover:bg-indigo-600 hover:text-white transition duration-200" title="Search">
+              <Search className=" w-5 h-5" />
             </button>
 
 
@@ -151,7 +152,8 @@ function Navbar() {
                   flex
                   items-center
                   gap-1
-                  p-2.5
+                  p-2
+                  md:p-2.5
                   cursor-pointer
                   rounded-full
                   bg-gray-100 text-gray-700 hover:bg-indigo-600 hover:text-white transition
@@ -164,10 +166,10 @@ function Navbar() {
               <div className="text-left">
                 
                 <p className="text-sm  md:block hidden  font-semibold">
-                  {location || "Select Location"}
+                  {location?.area || "Select Location"}
                 </p>
-                <p className=" block md:hidden  md:text-25px font-semibold">
-                  {location.split(", ")[0] || "Select Location"}
+                <p className=" block md:hidden text-xs  md:text-25px font-semibold">
+                  {location?.area || "Select Location"}
                 </p>
               </div>
 
@@ -182,7 +184,8 @@ function Navbar() {
               <button
                 className="
                   relative
-                  p-2.5
+                  p-2
+                  md:p-2.5
                   rounded-full
                   cursor-pointer
                 bg-gray-100

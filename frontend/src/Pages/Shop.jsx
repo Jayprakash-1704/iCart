@@ -1,17 +1,23 @@
 import ProductCard from "@/Components/ProductCard";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast, Toaster } from "sonner";
 
 const Shop = () => {
   const { category, subCategory } = useParams();
-  console.log("Category:", category);
-  console.log("Sub Category:", subCategory);
+  // console.log("Category:", category);
+  // console.log("Sub Category:", subCategory);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
     let ignore = false;
 
     const fetchProducts = async () => {
@@ -25,7 +31,7 @@ const Shop = () => {
         if (category && subCategory) {
           url += `?category=${encodeURIComponent(category)}&subCategory=${encodeURIComponent(subCategory)}`;
         }
-        
+
         else if (category) {
           url += `?category=${encodeURIComponent(category)}`;
         }
@@ -38,7 +44,7 @@ const Shop = () => {
 
         const data = await response.json();
 
-        console.log("Products:", data);
+        // console.log("Products:", data);
 
         if (!ignore) {
           setProducts(data);
@@ -79,14 +85,28 @@ const Shop = () => {
     );
   }
 
+
+  const triggerShopToast = (productName) => {
+    toast.success("Item added to Cart", {
+      description: productName,
+      position: "bottom-right",
+      action: {
+        label: "View Cart",
+        onClick: () => window.location.href = "/cart",
+      },
+    })
+  }
+
   return (
     <section className="bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
+        <Toaster position="bottom-right" closeButton richColors />
         <div className="mb-8">
-          <p className="text-sm text-gray-500">
-            Home &gt; Shop  {category && ` > ${category}`}
-            {subCategory && ` > ${subCategory}`}
+          <p className="text-md text-indigo-500">
+            Home &gt; Shop
+            {category && ` > ${category.charAt(0).toUpperCase() + category.slice(1)}`}
+            {subCategory && ` > ${subCategory.charAt(0).toUpperCase() + subCategory.slice(1)}`}
           </p>
 
           <h1 className="mt-2 text-3xl font-bold capitalize text-gray-900">
@@ -111,9 +131,9 @@ const Shop = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => (
-              <ProductCard key={product._id} product={product} />
+              <ProductCard key={product._id} product={product} onSuccessAdd={triggerShopToast} />
             ))}
           </div>
         )}

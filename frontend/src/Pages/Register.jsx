@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Eye,
@@ -14,6 +14,13 @@ import {
 
 const Register = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -101,8 +108,12 @@ const Register = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
+  console.error("Registration failed:", data);
+
+  throw new Error(
+    data.message || data.error || `Registration failed (${response.status})`
+  );
+}
 
       console.log("Registration successful:", data);
 
@@ -168,15 +179,15 @@ const Register = () => {
                 <div className="flex -space-x-3">
 
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-600 bg-yellow-200 text-sm font-bold text-gray-700">
-                    A
+                    I
                   </div>
 
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-600 bg-pink-200 text-sm font-bold text-gray-700">
-                    R
+                    Z
                   </div>
 
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-600 bg-green-200 text-sm font-bold text-gray-700">
-                    M
+                    A
                   </div>
 
                 </div>

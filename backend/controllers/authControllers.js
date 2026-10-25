@@ -17,7 +17,7 @@ const generateToken = (id) => {
 
 // Register a new user
 const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { fullName, email, password } = req.body;
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const user = await User.create({ name, email, password: hashedPassword });
+        const user = await User.create({ fullName, email, password: hashedPassword });
         if (user) {
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -38,15 +38,15 @@ const registerUser = async (req, res) => {
             user.otp = otp;
             await user.save();
 
-            
-            const message = ` Welcome to iCart, ${name}! Thank You for registering with us. We are excited to have you as part of our community. To complete your registration, please use following One Time Password (OTP) for iCard is ${otp} `;
+
+            const message = ` Welcome to iCart, ${fullName}! Thank You for registering with us. We are excited to have you as part of our community. To complete your registration, please use following One Time Password (OTP) for iCard is ${otp} `;
 
             await sendMail(email, "Welcome to iCart Your OTP for Registration", message);
 
 
             res.status(201).json({
                 _id: user._id,
-                name: user.name,
+                fullName: user.fullName,
                 email: user.email,
                 role: user.role,
                 token: generateToken(user._id),
@@ -59,6 +59,8 @@ const registerUser = async (req, res) => {
             })
         }
     } catch (error) {
+        console.log(error);
+
         res.status(400).json({ message: error.message });
     }
 }
@@ -73,12 +75,21 @@ const loginUser = async (req, res) => {
         if (user) {
             const checkPassword = await bcrypt.compare(password, user.password);
             if (user && checkPassword) {
-                res.json({
+                const token = generateToken(user._id)
+
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "lax",
+                    maxAge: 7 * 24 * 60 * 60 * 1000
+                })
+
+             return res.status(200).json({
                     _id: user._id,
-                    name: user.name,
+                    fullName: user.fullName,
                     email: user.email,
                     role: user.role,
-                    token: generateToken(user._id)
+                    token: token
                 })
             }
         }

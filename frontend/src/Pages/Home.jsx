@@ -9,6 +9,13 @@ function Home() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+
+    
+    
+    window.scrollTo({
+      top: 1300,
+      behavior: "smooth",
+    });
     const interval = setInterval(() => {
       setVisible((prev) => !prev);
     }, 1000);

@@ -22,9 +22,12 @@ const orderSchema = new mongoose.Schema({
         price: {
             type: Number,
             required: true,
+        },
+        name: {
+            type: String,
+            required: true
         }
-    }
-    ],
+    }],
     totalAmount: {
         type: Number,
         required: true
@@ -50,17 +53,19 @@ const orderSchema = new mongoose.Schema({
     },
     paymentId: {
         type: String,
-        
+
     },
     status: {
         type: String,
-        enum: ['pending',
-            'confirmed',
-            'processing',
-            'shipped',
-            'delivered',
-            'cancelled'],
-        default: 'pending',
+        enum: [
+            'Confirmed',
+            'Packed',
+            'Shipped',
+            'Delivered',
+            'Cancelled',
+            'Refunded'
+        ],
+        default: 'Confirmed',
     }
 
 }, { timestamps: true })

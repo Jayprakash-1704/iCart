@@ -1,11 +1,16 @@
-import express from 'express'
-import protect from "../middleware/authMiddleware.js";
-import admin from '../middleware/adminMiddleware.js'
-import { createdOrder, verifyPayment } from '../config/razorpay.js'
+import express from "express";
 
-const router=express.Router()
+import {
+  createdOrder,
+  verifyPayment,
+} from "../controllers/paymentControllers.js";
 
-router.post("/order", protect, createdOrder);
-router.post("/verify", protect, verifyPayment);
+import  protect  from "../middleware/authMiddleware.js";
+
+const router = express.Router();
+
+router.post("/create-order", protect, createdOrder);
+
+router.post("/verify-payment", protect, verifyPayment);
 
 export default router;

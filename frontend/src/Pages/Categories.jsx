@@ -1,5 +1,6 @@
 
 import CategoryMenu from "@/Components/NavigationMenu";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 
@@ -30,6 +31,13 @@ const categories = [
     },
   ];
 function Categories() {
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
   return (
     <div className="min-h-screen">

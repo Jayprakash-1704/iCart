@@ -24,6 +24,10 @@ const existingItem = cartItems.find(
     
 
     useEffect(() => {
+        window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
         const fetchProductDetails = async () => {
             try {
                 setLoading(true);

@@ -91,6 +91,13 @@ function Deals() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+
+
+  
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     const timer = setInterval(() => {
       setTime((prev) => {
         let { hours, minutes, seconds } = prev;

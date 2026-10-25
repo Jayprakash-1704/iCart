@@ -1,15 +1,23 @@
+
 import { createContext, useContext, useState } from "react";
 
 const LocationContext = createContext();
 
 export const LocationProvider = ({ children }) => {
-  const [location, setLocation] = useState(
-    localStorage.getItem("location") || ""
-  );
+  const [location, setLocation] = useState(() => {
+    try {
+      const savedLocation = localStorage.getItem("location");
+      return savedLocation ? JSON.parse(savedLocation) : {};
+    } catch (error) {
+      console.error("Error reading saved location:", error);
+      return {};
+    }
+  });
 
   const saveLocation = (newLocation) => {
     setLocation(newLocation);
-    localStorage.setItem("location", newLocation);
+
+    localStorage.setItem("location", JSON.stringify(newLocation));
   };
 
   return (
@@ -20,6 +28,5 @@ export const LocationProvider = ({ children }) => {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useLocation = () => {
-  return useContext(LocationContext);
-};
+export const useLocation = () => useContext(LocationContext);
+

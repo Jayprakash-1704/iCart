@@ -1,50 +1,92 @@
 import Order from '../models/order.models.js'
 import sendMail from '../utils/sendMail.js'
-
+import Product from '../models/product.models.js'
 
 const createOrder = async (req, res) => {
     try {
-        const { items, totalAmount, address, paymentId } = req.body
-        if (!items || items.length === 0 || !totalAmount || !address) {
-            return res.status(400).json({ message: 'Missing required fields' })
+        const { items, totalAmount, address, paymentId } = req.body;
+
+        if (!items || items.length === 0 || !address) {
+            return res.status(400).json({
+                message: "Missing required fields",
+            });
         }
-        else {
-            const order = new Order({
-                user: req.user._id,
-                items,
-                totalAmount,
-                address,
-                paymentId,
+
+        // Fetch product details and validate the items
+        const orderItems = await Promise.all(
+            items.map(async (item) => {
+                const product = await Product.findById(item.productId);
+
+                if (!product) {
+                    throw new Error(
+                        `Product not found: ${item.productId}`
+                    );
+                }
+
+                return {
+                    productId: product._id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: item.quantity,
+                };
             })
+        );
 
-            // console.log(req.user.email);
+        // Calculate the total on the server
+        const calculatedTotal = orderItems.reduce(
+            (total, item) => total + item.price * item.quantity,
+            0
+        );
 
-            const savedOrder = await order.save()
+        const order = new Order({
+            user: req.user._id,
+            items: orderItems,
+            totalAmount: calculatedTotal,
+            address,
+            paymentId,
+        });
 
-            // Send confirmation email
+        const savedOrder = await order.save();
 
-            const message = `Dear ${req.user.name},\n\nThank you for your order! Your order has been successfully placed.\n\nOrder Details:\nOrder ID: ${savedOrder._id}\nTotal Amount: ₹${savedOrder.totalAmount}\n\nWe will notify you once your order is shipped.\n\nBest regards,\niCart Team`;
+        const message = `Dear ${req.user.fullName || req.user.name || "Customer"},
 
-            await sendMail(
-                 req.user.email,
-                'Order Confirmation',
-                message
-            )
-            res.status(201).json({ message: 'Order created successfully', order: savedOrder })
-        }
+Thank you for your order! Your order has been successfully placed.
 
+Order Details:
+Order ID: ${savedOrder._id}
+Total Amount: ₹${savedOrder.totalAmount}
 
+We will notify you once your order is shipped.
+
+Best regards,
+iCart Team`;
+
+        await sendMail(
+            req.user.email,
+            "Order Confirmation",
+            message
+        );
+
+        return res.status(201).json({
+            message: "Order created successfully",
+            order: savedOrder,
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error creating order', error })
+        console.error("Create order error:", error);
+
+        return res.status(500).json({
+            message: "Error creating order",
+            error: error.message,
+        });
     }
-}
+};
 
 
 //    =>>>>>>>>>>>>>>>>>>>   get all users by admin
 
 const getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find().populate('user', 'name email').populate('items.productId', 'name price')
+        const orders = await Order.find().populate('user', 'fullName email').populate('items', 'name price imageUrl');
         res.status(200).json(orders)
     } catch (error) {
         res.status(500).json({ message: 'Error fetching orders', error })
@@ -85,6 +127,9 @@ const updateOrderStatus = async (req, res) => {
         res.status(500).json({ message: 'Error updating order status', error })
     }
 }
+
+
+
 
 
 

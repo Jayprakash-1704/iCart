@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../Redux/cartSlice";
 import { useState } from "react";
+// import { toast } from "sonner";
 
-function ProductCard({ product }) {
+function ProductCard({ product,onSuccessAdd }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
 
   const [showAdded, setShowAdded] = useState(false);
 
@@ -16,7 +18,9 @@ function ProductCard({ product }) {
 
   const handleAddToCart = () => {
     dispatch(addToCart(product));
-
+    if (onSuccessAdd) {
+      onSuccessAdd(product.name); 
+    }
     setShowAdded(false);
 
     // Restart animation even if user clicks quickly
@@ -30,7 +34,7 @@ function ProductCard({ product }) {
   };
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition duration-300">
+    <div className="group bg-white rounded-2xl border-2 hover:border-indigo-500 overflow-hidden  border-gray-100 hover:shadow-xl transition duration-300">
       {/* Product Image */}
       <div className="relative overflow-hidden bg-gray-100">
         <img
@@ -111,7 +115,7 @@ function ProductCard({ product }) {
         </p>
 
         {/* Product Name */}
-        <Link to={`/product/${product._id}`}>
+        <Link to={`/shop/product/${product._id}`}>
           <h3 className="font-bold text-gray-900 mt-1 line-clamp-1 hover:text-indigo-600 transition">
             {product.name}
           </h3>

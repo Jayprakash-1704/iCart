@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import  { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Eye,
@@ -11,9 +11,18 @@ import {
 } from "lucide-react";
 import { useContext } from "react";
 // import login from "@/Context/authContext";
-import { AuthContext } from "../Context/authContext";
+import { AuthContext } from "../Context/AuthContext";
 
 const Login = () => {
+
+ 
+
+useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}, []);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext); 
 

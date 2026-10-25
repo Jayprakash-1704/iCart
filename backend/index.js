@@ -8,6 +8,9 @@ import productsRoutes from "./routes/productRoutes.js";
 import ordersRoutes from './routes/ordersRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
 import analyticsRoutes from './routes/analyticsRoutes.js'
+import chatRoutes from "./routes/chatRoutes.js";
+import cookieParser from "cookie-parser";
+
 connectDB(); 
 
 
@@ -24,6 +27,9 @@ app.use(cors({
   credentials: true
 }));
 
+
+app.use(cookieParser());
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
@@ -34,8 +40,10 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/orders", ordersRoutes);
-app.use("/api/payment", paymentRoutes);
-app.use("/api/analytics", analyticsRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/admin/analytics", analyticsRoutes);
+
+app.use("/api/chat", chatRoutes);
 
 
 const PORT = process.env.PORT || 5000;

@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import { AuthProvider } from './Context/authContext.jsx'
+import { AuthProvider } from './Context/AuthContext.jsx'
 import { store } from './Redux/store.js'
 import { LocationProvider } from './Context/LocationContext'
 

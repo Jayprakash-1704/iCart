@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   increaseQuantity,
@@ -15,9 +15,24 @@ import {
   removeFromCart,
   clearCart,
 } from "../Redux/cartSlice";
+import { useEffect, useRef } from "react";
+
+
 
 const Cart = () => {
+   const scrollRef = useRef(null);
+  useEffect(()=>{
+    scrollRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    
+    })}
+    ,[])
+
+
+
   const dispatch = useDispatch();
+  const navigate=useNavigate()
 
   const cartItems = useSelector(
     (state) => state.cart.cartItems
@@ -108,6 +123,7 @@ const Cart = () => {
 
               <div
                 key={item._id}
+                ref={scrollRef}
                 className="rounded-2xl border border-gray-200 hover:border-indigo-400 bg-white p-4 shadow-sm sm:p-5"
               >
 
@@ -146,7 +162,7 @@ const Cart = () => {
                         onClick={() =>
                           dispatch(removeFromCart(item))
                         }
-                        className="cursor-pointer rounded-full p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-500"
+                        className="cursor-pointer rounded-full p-4 text-gray-400 transition hover:bg-red-50 hover:text-red-500"
                         title="Remove item"
                       >
                         <Trash2 className="h-5 w-5" />
@@ -242,6 +258,7 @@ const Cart = () => {
 
               {/* Checkout */}
               <button
+                onClick={() => navigate('/check-out')}
                 className="w-full cursor-pointer rounded-xl bg-indigo-600 px-6 py-3 font-semibold text-white transition hover:bg-indigo-700"
               >
                 Proceed to Checkout
