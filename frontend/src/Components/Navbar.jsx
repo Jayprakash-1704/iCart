@@ -6,6 +6,23 @@ import { Astroid, BadgePercent, House, LayoutList, MapPin, Search, ShoppingCart,
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useLocation } from "../Context/LocationContext";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
+  UserRound,
+  Package,
+  Settings,
+  LogOut,
+  ChevronDown,
+} from "lucide-react";
+
 import Location from "../Pages/Location";
 
 function Navbar() {
@@ -164,7 +181,7 @@ function Navbar() {
               <MapPin size={20} />
 
               <div className="text-left">
-                
+
                 <p className="text-sm  md:block hidden  font-semibold">
                   {location?.area || "Select Location"}
                 </p>
@@ -219,60 +236,114 @@ function Navbar() {
 
 
             {/* Account */}
-            {user ? (
-              <div className="flex items-center gap-1">
-                <button
-                  className="
-                hidden sm:flex
-                items-center
-                cursor-pointer
-                gap-2
-                ml-2
-                px-4
-                py-2.5
-                rounded-full
-                bg-indigo-600
-                text-white
-                hover:bg-gray-800
-                transition
-              "
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.8"
-                      d="M20 21a8 8 0 0 0-16 0M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
-                    />
-                  </svg>
 
-                  <span className="text-sm font-medium">
-                    Account
-                  </span>
-                </button>
-                <button
-                  onClick={handleLogOut}
-                  className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="
+          flex items-center gap-2
+          ml-2 px-4 py-2.5
+          rounded-full
+          bg-indigo-600 text-white
+          hover:bg-gray-800
+          transition duration-200
+          cursor-pointer
+          outline-none
+        "
+                  >
+                    <UserRound size={19} />
+
+                    <span className="hidden sm:inline text-sm font-medium">
+                      My Account
+                    </span>
+
+                    <ChevronDown size={16} className="hidden sm:inline" />
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent
+                  side="bottom"
+                  align="end"
+                  sideOffset={4}
+                  avoidCollisions={true}
+                  className="w-72 rounded-2xl border border-gray-200 bg-white p-2 shadow-xl z-9999"
+                  style={{
+                    position: "fixed",
+                    transform: "translateX(0)",
+                  }}
                 >
-                  Logout
-                </button>
-              </div>
+                  <DropdownMenuLabel className="px-3 py-2">
+                    <p className="text-sm font-semibold text-gray-900">
+                      My Account
+                    </p>
+
+                    <p className="text-xs font-normal text-gray-500 truncate">
+                      {user.fullName || user.name || user.email || "Welcome back"}
+                    </p>
+                  </DropdownMenuLabel>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    onSelect={() => navigate("/profile")}
+                    className="cursor-pointer rounded-lg py-2.5"
+                  >
+                    <UserRound className="mr-2 h-4 w-4" />
+                    My Profile
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    onSelect={() => navigate("/my-orders")}
+                    className="cursor-pointer rounded-lg py-2.5"
+                  >
+                    <Package className="mr-2 h-4 w-4" />
+                    My Orders
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    onSelect={() => navigate("/settings")}
+                    className="cursor-pointer rounded-lg py-2.5"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    onSelect={handleLogOut}
+                    className="
+          cursor-pointer rounded-lg py-2.5
+          text-red-600
+          focus:text-red-600
+          focus:bg-red-50
+        "
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <div className="hidden sm:flex items-center gap-4">
                 <Link
                   to="/login"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition"
+                  className="
+        px-4 py-2
+        bg-blue-500 text-white
+        rounded-xl
+        hover:bg-blue-600
+        transition
+      "
                 >
                   Login
                 </Link>
-
               </div>
             )}
+
+
 
 
 

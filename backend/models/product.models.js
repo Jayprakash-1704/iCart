@@ -21,6 +21,10 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    attributes: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
     discount: {
         type: Number,
         default: 0

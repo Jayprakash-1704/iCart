@@ -153,6 +153,7 @@ const verifyPayment = async (req, res) => {
           name: product.name,
           price: product.price,
           quantity: item.quantity,
+          imageUrl: product.imageUrl,
         };
       })
     );

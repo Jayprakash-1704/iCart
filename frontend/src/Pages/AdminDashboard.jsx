@@ -62,44 +62,17 @@ const revenueData = [
   { month: "Dec", revenue: 110000 },
 ];
 
-const categoryData = [
-  { category: "Electronics", sales: 85000 },
-  { category: "Fashion", sales: 62000 },
-  { category: "Home", sales: 45000 },
-  { category: "Beauty", sales: 35000 },
-  { category: "Books", sales: 22000 },
-];
-
-// const recentOrders = [
-//     {
-//         id: "#IC1024",
-//         customer: "Rahul Sharma",
-//         product: "Samsung Galaxy S24",
-//         amount: 74999,
-//         status: "Delivered",
-//     },
-//     {
-//         id: "#IC1025",
-//         customer: "Priya Verma",
-//         product: "Dell Wireless Keyboard",
-//         amount: 1499,
-//         status: "Processing",
-//     },
-//     {
-//         id: "#IC1026",
-//         customer: "Amit Kumar",
-//         product: "Crompton Energion",
-//         amount: 2899,
-//         status: "Pending",
-//     },
-//     {
-//         id: "#IC1027",
-//         customer: "Sneha Singh",
-//         product: "Wireless Headphones",
-//         amount: 3499,
-//         status: "Cancelled",
-//     },
+// const categoryData = [
+//   { category: "Electronics", sales: 85000 },
+//   { category: "Fashion", sales: 62000 },
+//   { category: "Home", sales: 45000 },
+//   { category: "Beauty", sales: 35000 },
+//   { category: "Books", sales: 22000 },
 // ];
+
+
+
+
 
 const formatCurrency = (value) =>
   new Intl.NumberFormat("en-IN", {
@@ -219,6 +192,7 @@ export default function AdminDashboard() {
         const data = await response.json();
         setAnalytics(data);
         console.log(data);
+        // console.log(data);
       } catch (err) {
         setError(err.message || "Something went wrong.");
       } finally {
@@ -700,7 +674,7 @@ export default function AdminDashboard() {
               <div className="h-72 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                    data={categoryData}
+                    data={analytics?.categoryData}
                     margin={{ top: 5, right: 8, left: 0, bottom: 0 }}
                   >
                     <CartesianGrid

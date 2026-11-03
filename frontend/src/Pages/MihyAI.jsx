@@ -15,12 +15,11 @@ import {
   MessageCircle,
   History,
   Settings,
-  ThumbsUp,
-  ThumbsDown,
   AlertCircle,
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
+import ProductCard from "@/Components/ProductCard";
 
 const API_URL = "http://localhost:5000/api/chat";
 
@@ -137,6 +136,8 @@ const AIShoppingAssistant = () => {
           id: `${Date.now()}-assistant`,
           role: "assistant",
           text: data.reply,
+          products: Array.isArray(data.products) ? data.products : [],
+
         },
       ]);
     } catch (error) {
@@ -370,8 +371,8 @@ const AIShoppingAssistant = () => {
               <div
                 key={item.id}
                 className={`flex gap-3 ${item.role === "user"
-                    ? "justify-end"
-                    : "justify-start"
+                  ? "justify-end"
+                  : "justify-start"
                   }`}
               >
                 {item.role === "assistant" && (
@@ -382,10 +383,10 @@ const AIShoppingAssistant = () => {
 
                 <div
                   className={`max-w-[90%] rounded-2xl p-4 sm:max-w-[85%] ${item.role === "user"
-                      ? "rounded-br-md bg-indigo-600 text-white"
-                      : item.isError
-                        ? "rounded-bl-md border border-red-200 bg-red-50 text-red-800"
-                        : "rounded-bl-md border border-slate-100 bg-slate-50 text-slate-800"
+                    ? "rounded-br-md bg-indigo-600 text-white"
+                    : item.isError
+                      ? "rounded-bl-md border border-red-200 bg-red-50 text-red-800"
+                      : "rounded-bl-md border border-slate-100 bg-slate-50 text-slate-800"
                     }`}
                 >
                   {item.isError && (
@@ -495,31 +496,22 @@ const AIShoppingAssistant = () => {
 
 
 
-                  {item.role === "assistant" && !item.isError && (
-                    <div className="mt-3 flex gap-2 border-t border-slate-200 pt-3">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          console.log("Helpful response:", item.id);
-                        }}
-                        className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-200 hover:text-indigo-600"
-                        aria-label="Helpful response"
-                        title="Helpful response"
-                      >
-                        <ThumbsUp size={15} />
-                      </button>
+                  {/* Products returned by MongoDB */}
+                  {item.role === "assistant" && item.products?.length > 0 && (
+                    <div className="mt-4">
+                      <p className="mb-3 text-sm font-semibold text-slate-700">
+                        Products you might like
+                      </p>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          console.log("Unhelpful response:", item.id);
-                        }}
-                        className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-200 hover:text-red-600"
-                        aria-label="Unhelpful response"
-                        title="Unhelpful response"
-                      >
-                        <ThumbsDown size={15} />
-                      </button>
+                      <div className="flex gap-3 overflow-x-auto pb-3">
+                        {item.products.map((product) => (
+                          <ProductCard
+                            key={product._id}
+                            product={product}
+                            
+                          />
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>

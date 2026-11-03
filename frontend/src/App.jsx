@@ -28,6 +28,7 @@ import Checkout from "./Pages/CheckOut";
 import AdminDashboard from "./Pages/AdminDashboard";
 import PageZoom from "./PageZoom";
 import PaymentStatus from "./Pages/PaymentStatus";
+import MyOrders from "./Pages/MyOrders";
 
 function AppLayout() {
   const location = useLocation();
@@ -50,13 +51,17 @@ function AppLayout() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/shipping" element={<ShippingInformation />} />
         <Route path="/returns" element={<ReturnRefund />} />
-        <Route path="/orders" element={<TrackOrder />} />
+        {/* <Route path="/orders" element={<TrackOrder />} /> */}
 
         <Route path="/deals" element={<Deals />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/mihy" element={<AIShoppingAssistant />} />
         <Route path="/check-out" element={<Checkout />} />
+        <Route path="/my-orders" element={<MyOrders />} />
+        <Route path="/my-orders/:id" element={<TrackOrder />} />
+
+
 
         {/* Admin dashboard */}
         <Route

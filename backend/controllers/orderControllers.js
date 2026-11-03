@@ -28,6 +28,7 @@ const createOrder = async (req, res) => {
                     name: product.name,
                     price: product.price,
                     quantity: item.quantity,
+                    imageUrl: product.imageUrl,
                 };
             })
         );
@@ -96,14 +97,18 @@ const getAllOrders = async (req, res) => {
 
 //  get my orders =>>>>>>>> Users <<<<<<=
 
+
 const myOrders = async (req, res) => {
     try {
         const userId = req.user._id;
 
         const orders = await Order.find({ user: userId })
-            .populate("items.productId", "name price");
+            .sort({ createdAt: -1 });
 
-        res.status(200).json({ message: "Your Orders fetched Successfully", orders });
+        res.status(200).json({
+            message: "Your orders fetched successfully",
+            orders
+        });
 
     } catch (error) {
         res.status(500).json({
@@ -112,6 +117,8 @@ const myOrders = async (req, res) => {
         });
     }
 };
+
+
 
 
 /// ==========>>>>>>>>>>>>>update order status by admin
@@ -128,9 +135,25 @@ const updateOrderStatus = async (req, res) => {
     }
 }
 
+const getOrderById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const order = await Order.findById(id).populate('user', 'fullName email').populate('items', 'name status price imageUrl'); 
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching order', error });
+    }
+};
 
 
 
 
 
-export { createOrder, getAllOrders, myOrders, updateOrderStatus }
+
+
+export { createOrder, getAllOrders, myOrders, updateOrderStatus, getOrderById }

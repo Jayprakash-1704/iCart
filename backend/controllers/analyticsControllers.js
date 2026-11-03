@@ -28,7 +28,7 @@ const getAnalytics = async (req, res) => {
 
 
 
-    Product.countDocuments({}),
+  Product.countDocuments({}),
 
       Order.countDocuments({ status: "Confirmed" }),
 
@@ -57,6 +57,72 @@ const totalRevenue = orders.reduce(
   0
 );
 
+
+
+
+
+  
+    const categoryData = await Order.aggregate([
+      // 1. Include only orders that count as completed sales
+      {
+        $match: {
+          status: "Delivered",
+        },
+      },
+
+      // 2. Separate each product in an order
+      {
+        $unwind: "$items",
+      },
+
+      // 3. Find the corresponding product
+      {
+        $lookup: {
+          from: "products",
+          localField: "items.productId",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+
+      // 4. Convert the product array into an object
+      {
+        $unwind: "$product",
+      },
+
+      // 5. Group sales by product category
+      {
+        $group: {
+          _id: "$product.category",
+
+          sales: {
+            $sum: {
+              $multiply: [
+                "$items.price",
+                "$items.quantity",
+              ],
+            },
+          },
+        },
+      },
+
+      // 6. Format the output
+      {
+        $project: {
+          _id: 0,
+          category: "$_id",
+          sales: 1,
+        },
+      },
+
+      // 7. Show the highest-selling categories first
+      {
+        $sort: {
+          sales: -1,
+        },
+      },
+    ])
+
 // Calculate average order value
 const averageOrderValue =
   orders.length > 0 ? totalRevenue / orders.length : 0;
@@ -76,6 +142,7 @@ res.status(200).json({
   cancelledOrders,
   outOfStockProducts,
   lowStockProducts,
+  categoryData,
 });
   } catch (error) {
   console.error("Analytics error:", error);

@@ -8,6 +8,7 @@ import productsRoutes from "./routes/productRoutes.js";
 import ordersRoutes from './routes/ordersRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
 import analyticsRoutes from './routes/analyticsRoutes.js'
+import invoiceRoutes from './routes/invoiceRoutes.js'
 import chatRoutes from "./routes/chatRoutes.js";
 import cookieParser from "cookie-parser";
 
@@ -42,6 +43,7 @@ app.use("/api/products", productsRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/admin/analytics", analyticsRoutes);
+app.use("/api/invoices", invoiceRoutes);
 
 app.use("/api/chat", chatRoutes);
 

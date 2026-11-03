@@ -9,7 +9,7 @@ const router=express.Router()
 
 router.post("/", protect, createOrder);
 router.get("/", protect,admin, getAllOrders);
-router.get("/myorders", protect, myOrders);
+router.get("/my-orders", protect, myOrders);
 router.put("/:id/status",protect,admin, updateOrderStatus);
 
 

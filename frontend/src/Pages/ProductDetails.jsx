@@ -5,29 +5,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../Redux/cartSlice";
 
 const ProductDetails = () => {
-const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-const { productId } = useParams();
+    const { productId } = useParams();
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-const cartItems = useSelector(
-  (state) => state.cart.cartItems
-);
+    const cartItems = useSelector(
+        (state) => state.cart.cartItems
+    );
 
-const existingItem = cartItems.find(
-  (item) => item._id === product?._id
-);
+    const existingItem = cartItems.find(
+        (item) => item._id === product?._id
+    );
 
-    
+
 
     useEffect(() => {
         window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+            top: 0,
+            behavior: "smooth",
+        });
         const fetchProductDetails = async () => {
             try {
                 setLoading(true);
@@ -180,24 +180,46 @@ const existingItem = cartItems.find(
                             )}
                         </div>
 
+
+<div className="mb-8">
+  <ul>
+    {Object.entries(
+      typeof product.attributes === "string"
+        ? JSON.parse(product.attributes || "{}")
+        : product.attributes || {}
+    ).map(([key, value]) => (
+      <li key={key}>
+        <strong>{key}:</strong>{" "}
+        {typeof value === "boolean"
+          ? value
+            ? "Yes"
+            : "No"
+          : String(value)}
+      </li>
+    ))}
+  </ul>
+</div>
+
+
+
                         {/* Buttons */}
                         <div className="flex flex-col gap-3 sm:flex-row">
 
                             <button
-                            onClick={() => dispatch(addToCart(product))}
+                                onClick={() => dispatch(addToCart(product))}
                                 disabled={product.stock <= 0}
                                 className="rounded-lg bg-black px-6 py-3 font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
                             >
-                                
+
                                 <span className="flex flex-row items-center gap-2">
                                     {
-                                    existingItem?<CircleCheckBig />:<ShoppingCartPlus />
-                                }  
-                                {
-                                    existingItem?" Added to Cart": "Add to Cart"
-                                }
-                                    
-                                    </span>
+                                        existingItem ? <CircleCheckBig /> : <ShoppingCartPlus />
+                                    }
+                                    {
+                                        existingItem ? " Added to Cart" : "Add to Cart"
+                                    }
+
+                                </span>
 
 
                             </button>

@@ -28,7 +28,7 @@ const Location = ({ onClose }) => {
           console.log("GPS accuracy:", accuracy, "meters");
 
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=jsonv2&zoom=14&addressdetails=1`
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=jsonv2&zoom=18&addressdetails=1`
           );
 
           if (!response.ok) {

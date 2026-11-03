@@ -16,7 +16,7 @@ function ProductCard({ product,onSuccessAdd }) {
     navigate(`/shop/product/${id}`);
   };
 
-  const handleAddToCart = () => {
+ const handleAddToCart = () => {
     dispatch(addToCart(product));
     if (onSuccessAdd) {
       onSuccessAdd(product.name); 
